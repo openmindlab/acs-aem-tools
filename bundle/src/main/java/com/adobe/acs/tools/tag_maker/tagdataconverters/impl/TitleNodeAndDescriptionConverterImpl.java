@@ -9,6 +9,7 @@ import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Service;
 
+import java.text.Normalizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,7 +45,6 @@ public class TitleNodeAndDescriptionConverterImpl implements TagDataConverter {
     private static final Pattern PATTERN = Pattern.compile("\\{\\{(.+?)}}$");
 
 
-
     @Override
     public final String getLabel() {
         return LABEL;
@@ -62,6 +62,10 @@ public class TitleNodeAndDescriptionConverterImpl implements TagDataConverter {
         if (matcher.find() && matcher.groupCount() >= 1) {
             String[] test = StringUtils.split(StringUtils.stripToEmpty(matcher.group(1)), "|");
             name = StringUtils.trimToEmpty(test[0]);
+            name = Normalizer.normalize(name, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+            name = name.replaceAll("[^A-Za-z0-9-]", "");
+            name = StringUtils.replace(name, " ", "-").toLowerCase();
+
             if (ArrayUtils.getLength(test) == 2) {
                 description = StringUtils.trimToEmpty(test[1]);
             }

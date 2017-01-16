@@ -37,6 +37,14 @@ public class TitleNodeAndDescriptionConverterImplTest extends TestCase {
         assertEquals(expectedName, actual.getTitle());
         assertEquals(expectedName, actual.getName());
         assertEquals(expectedDescription, actual.getDescription());
+
+
+
+        actual = converter.convert(StringUtils.join(new String[]{"álcool {{ álcool    |   álcool  }}"}));
+
+        assertEquals("álcool", actual.getTitle());
+        assertEquals("alcool", actual.getName());
+        assertEquals("álcool", actual.getDescription());
     }
 
 }
